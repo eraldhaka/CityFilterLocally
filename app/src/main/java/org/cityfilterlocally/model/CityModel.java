@@ -1,5 +1,7 @@
 package org.cityfilterlocally.model;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by Erald Haka.
  */
@@ -8,7 +10,7 @@ public class CityModel implements Comparable<CityModel>{
     private String country;
     private String name;
     private Integer id;
-    private CoordModel coordModel;
+    private CoordModel coord;
 
     private String fullName;
 
@@ -20,31 +22,20 @@ public class CityModel implements Comparable<CityModel>{
         this.country = country;
         this.name = name;
         this.id = id;
-        this.coordModel = coordModel;
+        this.coord = coordModel;
     }
 
     public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getFullName() {
@@ -55,18 +46,16 @@ public class CityModel implements Comparable<CityModel>{
     }
 
     public CoordModel getCoord() {
-        return coordModel;
+        return coord;
     }
 
-    public void setCoord(CoordModel coordModel) {
-        this.coordModel = coordModel;
-    }
 
     @Override
     public int compareTo(CityModel cityModel) {
         return getFullName().compareToIgnoreCase(cityModel.getFullName());
     }
 
+    @NonNull
     @Override
     public String toString() {
         return name;

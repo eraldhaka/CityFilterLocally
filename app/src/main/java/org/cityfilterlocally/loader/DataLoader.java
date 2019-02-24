@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import com.google.gson.Gson;
 import org.cityfilterlocally.model.CityModel;
-import org.cityfilterlocally.util.Utils;
+import org.cityfilterlocally.util.ProviderUtil;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -17,7 +17,7 @@ public class DataLoader extends AsyncTaskLoader<Collection<CityModel>> {
 
     private Gson gson;
 
-    public DataLoader(Context context, Gson gson, Bundle bundle) {
+    public DataLoader(Context context, Gson gson) {
         super(context);
         this.gson = gson;
     }
@@ -39,7 +39,7 @@ public class DataLoader extends AsyncTaskLoader<Collection<CityModel>> {
     public Collection<CityModel> loadInBackground() {
         Collection<CityModel> cityModels;
         try {
-            cityModels = Utils.loadData(getContext(),gson);
+            cityModels = ProviderUtil.loadData(getContext(),gson);
         } catch (IOException e) {
             cityModels = null;
         }

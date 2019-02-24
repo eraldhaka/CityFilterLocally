@@ -1,19 +1,23 @@
 package org.cityfilterlocally.ui.activity;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 import com.google.gson.Gson;
 import org.cityfilterlocally.R;
 import org.cityfilterlocally.loader.DataLoader;
 import org.cityfilterlocally.model.CityModel;
 import org.cityfilterlocally.ui.adapter.MainAdapter;
-
+import org.cityfilterlocally.util.GoogleMapUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     ListView listItem;
     private int loaderId = 0;
 
-    private List<CityModel> cityModel;
     private ArrayAdapter<CityModel> mainAdapter;
 
     @Override
@@ -44,6 +47,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         listItem = findViewById(R.id.list_item);
         searchView.setOnQueryTextListener(this);
         listItem.setTextFilterEnabled(true);
+
+        listItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CityModel city = (CityModel) parent.getItemAtPosition(position);
+                Intent mapIntent = GoogleMapUtil.gMapIntent(city);
+                PackageManager packageManager = getPackageManager();
+                if (mapIntent.resolveActivity(packageManager) != null) {
+                    startActivity(mapIntent);
+                } else {
+                    Toast.makeText(MainActivity.this, R.string.no_google_map_app, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         loadData();
     }
 
@@ -55,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<Collection<CityModel>> onCreateLoader(int i, Bundle bundle) {
         if (loaderId == i) {
-            return new DataLoader(this, gson,bundle);
+            return new DataLoader(this, gson);
         } else {
             return null;
         }
@@ -64,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<Collection<CityModel>> loader, Collection<CityModel> cityModels) {
         if(cityModels!=null){
-            cityModel = new ArrayList<>(cityModels);
+            List<CityModel> cityModel = new ArrayList<>(cityModels);
             mainAdapter = new MainAdapter(this, android.R.layout.simple_list_item_1, cityModel);
             listItem.setAdapter(mainAdapter);
             loadingProgress.setVisibility(View.INVISIBLE);

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CityFilterLocally</string>
+    <string name="no_google_map_app">Google Maps app is not found</string>
 </resources>
