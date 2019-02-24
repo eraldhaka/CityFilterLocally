@@ -22,7 +22,8 @@ import java.util.List;
  * Created by Erald Haka.
  */
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Collection<CityModel>>{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Collection<CityModel>>,
+        SearchView.OnQueryTextListener{
 
     private SearchView searchView;
     private ProgressBar loadingProgress;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         searchView = findViewById(R.id.search_view);
         loadingProgress = findViewById(R.id.loading_progress);
         listItem = findViewById(R.id.list_item);
+        searchView.setOnQueryTextListener(this);
+        listItem.setTextFilterEnabled(true);
         loadData();
     }
 
@@ -77,4 +80,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<Collection<CityModel>> loader) {
 
     }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        mainAdapter.getFilter().filter(s);
+        return false;
+    }
+
 }
